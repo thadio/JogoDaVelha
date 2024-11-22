@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo da Velha</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      color: #333;
+    }
+    .form-container {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      max-width: 400px;
+      width: 100%;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .radio-container {
+      margin-bottom: 16px;
+    }
+    .radio-container input {
+      margin-right: 8px;
+    }
+    button {
+      width: 100%;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .game-board {
+      margin-top: 20px;
+      width: 400px;
+      height: 400px;
+      border: 2px dashed #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bem-vindo ao Jogo da Velha</h1>
+  <div class="form-container">
+    <label for="player1">Nome do Jogador 1:</label>
+    <input type="text" id="player1" placeholder="Digite o nome do Jogador 1">
+
+    <label for="player2">Nome do Jogador 2:</label>
+    <input type="text" id="player2" placeholder="Digite o nome do Jogador 2">
+
+    <div class="radio-container">
+      <label>Escolha sua marca:</label>
+      <input type="radio" id="x" name="mark" value="X" checked>
+      <label for="x">X</label>
+      <input type="radio" id="o" name="mark" value="O">
+      <label for="o">O</label>
+    </div>
+
+    <button onclick="startGame()">Iniciar Jogo</button>
+  </div>
+
+  <div class="game-board" id="gameBoard">
+    <p>O jogo será exibido aqui.</p>
+  </div>
+
+  <script>
+    function startGame() {
+      const player1 = document.getElementById('player1').value;
+      const player2 = document.getElementById('player2').value;
+      const mark = document.querySelector('input[name="mark"]:checked').value;
+
+      if (!player1 || !player2) {
+        alert('Por favor, insira os nomes de ambos os jogadores.');
+        return;
+      }
+
+      alert(`Jogo iniciado! ${player1} escolheu ${mark}, ${player2} ficará com ${mark === 'X' ? 'O' : 'X'}.`);
+
+      // Aqui chamamos o backend em Python para renderizar o jogo.
+      const gameBoard = document.getElementById('gameBoard');
+      gameBoard.innerHTML = '<p>Iniciando o jogo...</p>';
+
+      // Conectar ao backend para rodar o jogo Python (espaço reservado)
+      fetch('/start-python-game', { // Substitua com sua rota Python
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ player1, player2, mark })
+      })
+        .then(response => response.text())
+        .then(data => {
+          gameBoard.innerHTML = `<pre>${data}</pre>`;
+        })
+        .catch(error => {
+          console.error('Erro ao iniciar o jogo:', error);
+          gameBoard.innerHTML = '<p>Ocorreu um erro ao iniciar o jogo. Tente novamente.</p>';
+        });
+    }
+  </script>
+</body>
+</html>
